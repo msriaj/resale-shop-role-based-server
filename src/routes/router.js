@@ -3,7 +3,14 @@ const {
   showCategories,
   deleteCategories,
 } = require("../controller/category.controller");
-const { addProduct, products } = require("../controller/product.controller");
+const {
+  addProduct,
+  products,
+  deleteProduct,
+  advertizeProduct,
+  getProducts,
+  getProductsByCat,
+} = require("../controller/product.controller");
 const {
   addUser,
   googleUser,
@@ -21,6 +28,10 @@ router.get("/check-role", checkRole);
 router.get("/categories", showCategories);
 router.get("/products", products);
 router.get("/delete-category/:id", deleteCategories);
+router.get("/advertize-product/:id", advertizeProduct);
+router.get("/delete-product/:id", deleteProduct);
+router.get("/get-products", getProducts);
+router.get("/get-products/:id", getProductsByCat);
 
 router.post("/add-user", addUser);
 router.post("/add-product", addProduct);

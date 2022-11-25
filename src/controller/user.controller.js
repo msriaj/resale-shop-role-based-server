@@ -12,7 +12,8 @@ exports.googleUser = async (req, res) => {
   const findUser = await User.findOne({ email: req.body.email });
   if (!findUser) {
     const result = await User.insertOne(req.body);
-    res.status(200).send("inserted success");
+    console.log(result);
+    return res.status(200).send("inserted success");
   }
   res.send(findUser);
 };
