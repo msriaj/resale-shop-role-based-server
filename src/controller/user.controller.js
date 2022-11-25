@@ -1,21 +1,6 @@
 const { ObjectId } = require("mongodb");
 const { getDb } = require("../database/db");
 
-exports.apiCheck = async (req, res) => {
-  const User = await getDb().collection("user");
-
-  await User.insertOne({ name: "bokkor" });
-
-  res.send("ok");
-};
-
-exports.mobile = async (req, res) => {
-  const product = await Product();
-  product.insertOne({ nam: "s" });
-  await Product();
-  res.send("ok");
-};
-
 exports.addUser = async (req, res) => {
   const User = await getDb().collection("user");
   const result = await User.insertOne(req.body);
@@ -48,4 +33,15 @@ exports.deleteUser = async (req, res) => {
   const User = await getDb().collection("user");
   const findUser = await User.deleteOne({ _id: ObjectId(req.params.id) });
   res.send(findUser);
+};
+
+exports.verifyUser = async (req, res) => {
+  const User = await getDb().collection("user");
+  const result = await User.updateOne(
+    { _id: ObjectId(req.params.id) },
+    {
+      $set: { verify: true },
+    }
+  );
+  res.send(result);
 };

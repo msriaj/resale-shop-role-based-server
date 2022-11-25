@@ -1,16 +1,30 @@
 const {
+  addCategory,
+  showCategories,
+  deleteCategories,
+} = require("../controller/category.controller");
+const { addProduct, products } = require("../controller/product.controller");
+const {
   addUser,
   googleUser,
   checkRole,
   showUser,
   deleteUser,
+  verifyUser,
 } = require("../controller/user.controller");
 const router = require("express").Router();
 
-router.get("/check-role", checkRole);
-router.post("/add-user", addUser);
 router.get("/all-user", showUser);
 router.get("/delete-user/:id", deleteUser);
+router.get("/verify-user/:id", verifyUser);
+router.get("/check-role", checkRole);
+router.get("/categories", showCategories);
+router.get("/products", products);
+router.get("/delete-category/:id", deleteCategories);
+
+router.post("/add-user", addUser);
+router.post("/add-product", addProduct);
+router.post("/add-category", addCategory);
 router.post("/google-user", googleUser);
 
 module.exports = router;
