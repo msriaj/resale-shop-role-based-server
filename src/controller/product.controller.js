@@ -47,6 +47,30 @@ exports.getProducts = async (req, res) => {
   res.send(result);
 };
 
+exports.advertize = async (req, res) => {
+  const products = await getDb().collection("product");
+  const result = await products
+    .aggregate([
+      {
+        $match: {
+          status: "available",
+          advertize: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "user",
+          localField: "userID",
+          foreignField: "_id",
+          as: "sellerInfo",
+        },
+      },
+    ])
+    .toArray();
+
+  res.send(result);
+};
+
 exports.getProductsByCat = async (req, res) => {
   const products = await getDb().collection("product");
   console.log(req.params.id);

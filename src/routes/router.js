@@ -9,6 +9,7 @@ router.get("/categories", Category.showCategories);
 router.post("/add-category", verifyToken, verifyAdmin, Category.addCategory);
 router.get("/delete-category/:id", verifyToken, Category.deleteCategories);
 
+router.get("/advertize", Product.advertize);
 router.get("/products", verifyToken, Product.products);
 router.get("/advertize-product/:id", verifyToken, Product.advertizeProduct);
 router.get("/delete-product/:id", verifyToken, Product.deleteProduct);
