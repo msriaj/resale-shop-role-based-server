@@ -4,10 +4,12 @@ const { timeStamp } = require("../utils/timestamp");
 
 exports.addProduct = async (req, res) => {
   const products = await getDb().collection("product");
-  const { userID, ...rest } = req.body;
+  const { category, userID, ...rest } = req.body;
+
   const result = await products.insertOne({
     ...rest,
     userID: ObjectId(userID),
+    category: ObjectId(category),
     status: "available",
     createdAt: timeStamp(),
   });
@@ -47,10 +49,11 @@ exports.getProducts = async (req, res) => {
 
 exports.getProductsByCat = async (req, res) => {
   const products = await getDb().collection("product");
+  console.log(req.params.id);
   const result = await products
     .aggregate([
       {
-        $match: { category: req.params.id },
+        $match: { category: ObjectId(req.params.id) },
       },
       {
         $lookup: {

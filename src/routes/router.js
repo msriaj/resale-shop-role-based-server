@@ -1,41 +1,28 @@
-const {
-  addCategory,
-  showCategories,
-  deleteCategories,
-} = require("../controller/category.controller");
-const {
-  addProduct,
-  products,
-  deleteProduct,
-  advertizeProduct,
-  getProducts,
-  getProductsByCat,
-} = require("../controller/product.controller");
-const {
-  addUser,
-  googleUser,
-  checkRole,
-  showUser,
-  deleteUser,
-  verifyUser,
-} = require("../controller/user.controller");
+const Category = require("../controller/category.controller");
+const Product = require("../controller/product.controller");
+const Auth = require("../controller/auth.controller");
+const { verifyToken } = require("../middleware/tokenVerification");
+const { verifyAdmin } = require("../middleware/adminCheck");
 const router = require("express").Router();
 
-router.get("/all-user", showUser);
-router.get("/delete-user/:id", deleteUser);
-router.get("/verify-user/:id", verifyUser);
-router.get("/check-role", checkRole);
-router.get("/categories", showCategories);
-router.get("/products", products);
-router.get("/delete-category/:id", deleteCategories);
-router.get("/advertize-product/:id", advertizeProduct);
-router.get("/delete-product/:id", deleteProduct);
-router.get("/get-products", getProducts);
-router.get("/get-products/:id", getProductsByCat);
+router.get("/categories", Category.showCategories);
+router.post("/add-category", verifyToken, verifyAdmin, Category.addCategory);
+router.get("/delete-category/:id", verifyToken, Category.deleteCategories);
 
-router.post("/add-user", addUser);
-router.post("/add-product", addProduct);
-router.post("/add-category", addCategory);
-router.post("/google-user", googleUser);
+router.get("/products", verifyToken, Product.products);
+router.get("/advertize-product/:id", verifyToken, Product.advertizeProduct);
+router.get("/delete-product/:id", verifyToken, Product.deleteProduct);
+router.get("/get-products", verifyToken, Product.getProducts);
+router.get("/get-products/:id", verifyToken, Product.getProductsByCat);
+router.post("/add-product", verifyToken, Product.addProduct);
+
+router.get("/delete-user/:id", verifyToken, Auth.deleteUser);
+router.get("/check-role", verifyToken, Auth.checkRole);
+router.get("/all-user", verifyToken, Auth.showUser);
+router.get("/verify-user/:id", verifyToken, Auth.verifyUser);
+
+router.post("/get-token", Auth.getToken);
+router.post("/add-user", Auth.addUser);
+router.post("/google-user", Auth.googleUser);
 
 module.exports = router;
