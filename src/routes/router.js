@@ -20,7 +20,8 @@ router.get("/get-products/:id", verifyToken, Product.getProductsByCat);
 router.post("/add-product", verifyToken, Product.addProduct);
 
 // --------Orders--------
-router.post("/bookProduct", verifyToken, Order.bookProduct);
+router.post("/book-product", verifyToken, Order.bookProduct);
+router.get("/my-orders", verifyToken, Order.myOrders);
 
 router.get("/delete-user/:id", verifyToken, Auth.deleteUser);
 router.get("/check-role", verifyToken, Auth.checkRole);
