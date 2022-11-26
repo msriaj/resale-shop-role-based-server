@@ -65,8 +65,12 @@ exports.showUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   const User = await getDb().collection("user");
+  const Product = await getDb().collection("product");
   const findUser = await User.deleteOne({ _id: ObjectId(req.params.id) });
-  res.send(findUser);
+  const deleteCount = await Product.deleteMany({
+    userID: ObjectId(req.params.id),
+  });
+  res.send({ findUser, deleteCount });
 };
 
 exports.verifyUser = async (req, res) => {

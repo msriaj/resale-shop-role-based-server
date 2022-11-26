@@ -16,19 +16,6 @@ exports.addProduct = async (req, res) => {
   res.send(result);
 };
 
-exports.bookProduct = async (req, res) => {
-  const products = await getDb().collection("booked");
-
-  const { buyerEmail, productId, ...rest } = req.body;
-
-  const result = await products.insertOne({
-    ...rest,
-    productId: ObjectId(productId),
-    createdAt: timeStamp(),
-  });
-  res.send(result);
-};
-
 exports.products = async (req, res) => {
   const products = await getDb().collection("product");
   if (req.query.email) {
@@ -45,6 +32,29 @@ exports.getProducts = async (req, res) => {
     .aggregate([
       {
         $match: {},
+      },
+      {
+        $lookup: {
+          from: "user",
+          localField: "userID",
+          foreignField: "_id",
+          as: "sellerInfo",
+        },
+      },
+    ])
+    .toArray();
+
+  res.send(result);
+};
+
+exports.getProductsByLocation = async (req, res) => {
+  const products = await getDb().collection("product");
+  const result = await products
+    .aggregate([
+      {
+        $match: {
+          location: req.params.location,
+        },
       },
       {
         $lookup: {
