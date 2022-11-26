@@ -16,6 +16,7 @@ router.get("/delete-product/:id", verifyToken, Product.deleteProduct);
 router.get("/get-products", verifyToken, Product.getProducts);
 router.get("/get-products/:id", verifyToken, Product.getProductsByCat);
 router.post("/add-product", verifyToken, Product.addProduct);
+router.post("/bookProduct", verifyToken, Product.bookProduct);
 
 router.get("/delete-user/:id", verifyToken, Auth.deleteUser);
 router.get("/check-role", verifyToken, Auth.checkRole);

@@ -16,6 +16,19 @@ exports.addProduct = async (req, res) => {
   res.send(result);
 };
 
+exports.bookProduct = async (req, res) => {
+  const products = await getDb().collection("booked");
+
+  const { buyerEmail, productId, ...rest } = req.body;
+
+  const result = await products.insertOne({
+    ...rest,
+    productId: ObjectId(productId),
+    createdAt: timeStamp(),
+  });
+  res.send(result);
+};
+
 exports.products = async (req, res) => {
   const products = await getDb().collection("product");
   if (req.query.email) {

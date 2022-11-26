@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// db connect
+// db connect and use router
 connectToDatabase()
   .then(() => {
     const port = process.env.PORT || 8000;
