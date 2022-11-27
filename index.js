@@ -3,6 +3,9 @@ const cors = require("cors");
 const router = require("./src/routes/router");
 const { connectToDatabase } = require("./src/database/db");
 require("dotenv").config();
+const stripe = require("stripe")(
+  "sk_test_51M8qENL39Ynj9W9LNxVcZjHul6AJOu3wpBvwONekzwqtpDGhS0UJRu9Eq2Lo27CidYSxMK4PPA1JMGM0TCDFIrq900C24wHGHp"
+);
 
 const app = express();
 

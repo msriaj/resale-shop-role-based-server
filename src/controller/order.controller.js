@@ -1,6 +1,11 @@
 const { ObjectId } = require("mongodb");
 const { getDb } = require("../database/db");
 const { timeStamp } = require("../utils/timestamp");
+require("dotenv").config();
+
+const stripe = require("stripe")(
+  "sk_test_51M8qENL39Ynj9W9LNxVcZjHul6AJOu3wpBvwONekzwqtpDGhS0UJRu9Eq2Lo27CidYSxMK4PPA1JMGM0TCDFIrq900C24wHGHp"
+);
 
 exports.bookProduct = async (req, res) => {
   const products = await getDb().collection("booked");
@@ -75,7 +80,6 @@ exports.myWishList = async (req, res) => {
 exports.myOrders = async (req, res) => {
   const bookings = await getDb().collection("booked");
   const id = req.decoded.id;
-  // const result = await bookings.find({ buyerId: ObjectId(id) }).toArray();
   const result = await bookings
     .aggregate([
       {
@@ -94,4 +98,26 @@ exports.myOrders = async (req, res) => {
     ])
     .toArray();
   res.send(result);
+};
+
+exports.book = async (req, res) => {
+  const booking = await getDb().collection("booked");
+  console.log(req.params.id);
+  const result = await booking.findOne({ _id: ObjectId(req.params.id) });
+  res.send(result);
+};
+
+exports.paymentIntent = async (req, res) => {
+  const booking = req.body;
+  const amount = parseInt(booking.resalePrice);
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amount,
+    currency: "usd",
+    payment_method_types: ["card"],
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
 };
