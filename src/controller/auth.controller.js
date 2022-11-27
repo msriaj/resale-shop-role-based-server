@@ -62,6 +62,16 @@ exports.showUser = async (req, res) => {
   const findUser = await User.find({}).toArray();
   res.send(findUser);
 };
+exports.showBuyers = async (req, res) => {
+  const User = await getDb().collection("user");
+  const findUser = await User.find({ role: "buyers" }).toArray();
+  res.send(findUser);
+};
+exports.showSellers = async (req, res) => {
+  const User = await getDb().collection("user");
+  const findUser = await User.find({ role: "seller" }).toArray();
+  res.send(findUser);
+};
 
 exports.deleteUser = async (req, res) => {
   const User = await getDb().collection("user");
@@ -81,5 +91,30 @@ exports.verifyUser = async (req, res) => {
       $set: { verify: true },
     }
   );
+  res.send(result);
+};
+
+exports.myBuyers = async (req, res) => {
+  const booked = await getDb().collection("booked");
+  const id = req.decoded.id;
+  // const result = await booked.find({ sellerId: ObjectId(id) }).toArray();
+  const result = await booked
+    .aggregate([
+      {
+        $match: {
+          sellerId: ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: "user",
+          localField: "buyerId",
+          foreignField: "_id",
+          as: "buyerInfo",
+        },
+      },
+    ])
+    .toArray();
+
   res.send(result);
 };
