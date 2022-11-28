@@ -31,7 +31,9 @@ exports.getProducts = async (req, res) => {
   const result = await products
     .aggregate([
       {
-        $match: {},
+        $match: {
+          status: "available",
+        },
       },
       {
         $lookup: {
@@ -54,6 +56,7 @@ exports.getProductsByLocation = async (req, res) => {
       {
         $match: {
           location: req.params.location,
+          status: "available",
         },
       },
       {
@@ -100,7 +103,7 @@ exports.getProductsByCat = async (req, res) => {
   const result = await products
     .aggregate([
       {
-        $match: { category: ObjectId(req.params.id) },
+        $match: { category: ObjectId(req.params.id), status: "available" },
       },
       {
         $lookup: {

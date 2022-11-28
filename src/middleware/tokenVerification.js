@@ -14,7 +14,8 @@ exports.verifyToken = async (req, res, next) => {
       id: verify.id,
       email: verify.email,
     };
-
+    console.log(verify.id);
+    console.log(verify.email);
     next();
   } catch (error) {
     res.status(500).send(error.message);

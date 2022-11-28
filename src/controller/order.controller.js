@@ -25,12 +25,13 @@ exports.bookProduct = async (req, res) => {
 exports.addToWish = async (req, res) => {
   const products = await getDb().collection("WishList");
 
-  const id = req.decoded.id;
+  const { id } = req.decoded;
+  console.log("addToWish", id);
   const { wishedProduct, sellerId } = req.body;
 
   const data = {
     sellerId: ObjectId(sellerId),
-    buyerId: ObjectId(req.decoded.id),
+    buyerId: ObjectId(id),
     wishedProduct: ObjectId(wishedProduct),
     createdAt: timeStamp(),
   };
@@ -40,7 +41,8 @@ exports.addToWish = async (req, res) => {
 
 exports.myWishList = async (req, res) => {
   const products = await getDb().collection("WishList");
-  const id = req.decoded.id;
+  const id = await req.decoded.id;
+  console.log(id);
   const result = await products
     .aggregate([
       {
@@ -79,7 +81,8 @@ exports.myWishList = async (req, res) => {
 
 exports.myOrders = async (req, res) => {
   const bookings = await getDb().collection("booked");
-  const id = req.decoded.id;
+  const { id } = req.decoded;
+  console.log("myOrders", id);
   const result = await bookings
     .aggregate([
       {
@@ -120,4 +123,15 @@ exports.paymentIntent = async (req, res) => {
   res.send({
     clientSecret: paymentIntent.client_secret,
   });
+};
+
+exports.sold = async (req, res) => {
+  const User = await getDb().collection("product");
+  const result = await User.updateOne(
+    { _id: ObjectId(req.params.id) },
+    {
+      $set: { status: "sold" },
+    }
+  );
+  res.send(result);
 };

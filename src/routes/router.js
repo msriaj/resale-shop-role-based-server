@@ -24,6 +24,7 @@ router.post("/add-product", verifyToken, Product.addProduct);
 router.post("/book-product", verifyToken, Order.bookProduct);
 router.get("/my-orders", verifyToken, Order.myOrders);
 router.get("/book/:id", Order.book);
+router.get("/sold/:id", Order.sold);
 
 router.get("/delete-user/:id", verifyToken, Auth.deleteUser);
 router.get("/check-role", verifyToken, Auth.checkRole);

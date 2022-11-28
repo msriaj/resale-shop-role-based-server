@@ -76,10 +76,26 @@ exports.showSellers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const User = await getDb().collection("user");
   const Product = await getDb().collection("product");
+  const booked = await getDb().collection("booked");
+  const wish = await getDb().collection("WishList");
+
   const findUser = await User.deleteOne({ _id: ObjectId(req.params.id) });
+
+  // delete all post of user
   const deleteCount = await Product.deleteMany({
     userID: ObjectId(req.params.id),
   });
+
+  // delete all booking  of user
+  const deleteBooking = await booked.deleteMany({
+    buyerId: ObjectId(req.params.id),
+  });
+
+  // delete all wish  of user
+  const deleteWish = await wish.deleteMany({
+    buyerId: ObjectId(req.params.id),
+  });
+
   res.send({ findUser, deleteCount });
 };
 
@@ -96,7 +112,8 @@ exports.verifyUser = async (req, res) => {
 
 exports.myBuyers = async (req, res) => {
   const booked = await getDb().collection("booked");
-  const id = req.decoded.id;
+  const { id } = req.decoded;
+  console.log("myBuyers", id);
   // const result = await booked.find({ sellerId: ObjectId(id) }).toArray();
   const result = await booked
     .aggregate([
