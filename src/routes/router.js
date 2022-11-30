@@ -26,8 +26,10 @@ router.get("/my-orders", verifyToken, Order.myOrders);
 router.get("/book/:id", Order.book);
 router.get("/sold/:id", Order.sold);
 
+router.get("/ads/:id", Product.advertisement);
+
 router.get("/delete-user/:id", verifyToken, Auth.deleteUser);
-router.get("/check-role", verifyToken, Auth.checkRole);
+router.get("/check-role", Auth.checkRole);
 router.get("/all-user", verifyToken, Auth.showUser);
 router.get("/all-buyer", verifyToken, Auth.showBuyers);
 router.post("/add-wish", verifyToken, Order.addToWish);

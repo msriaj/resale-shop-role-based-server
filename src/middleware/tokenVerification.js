@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 exports.verifyToken = async (req, res, next) => {
   try {
-    const header = req.headers.token;
+    const header = req.headers["token"];
 
     if (!header) return res.status(401).send("Unauthorized access !");
 
@@ -14,6 +14,7 @@ exports.verifyToken = async (req, res, next) => {
       id: verify.id,
       email: verify.email,
     };
+    console.log(token);
     console.log(verify.id);
     console.log(verify.email);
     next();

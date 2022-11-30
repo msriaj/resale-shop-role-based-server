@@ -5,11 +5,14 @@ const { createToken } = require("../utils/createToken");
 exports.addUser = async (req, res) => {
   const User = await getDb().collection("user");
   const result = await User.insertOne(req.body);
-
+  console.log(result);
   // generate token
-  const token = await createToken({ id: result._id, email: req.body.email });
+  const token = await createToken({
+    id: result.insertedId.toString(),
+    email: req.body.email,
+  });
 
-  res.send({ token });
+  res.send({ token, role: req.body.role });
 };
 
 exports.googleUser = async (req, res) => {
@@ -22,15 +25,19 @@ exports.googleUser = async (req, res) => {
   if (!findUser) {
     const result = await User.insertOne(req.body);
     // generate token
-    const token = await createToken({ id: result._id, email });
+    const token = await createToken({ id: result._id.toString(), email });
 
-    return res.status(200).send({ token, msg: "inserted success" });
+    return res
+      .status(200)
+      .send({ token, role: "buyers", msg: "inserted success" });
   }
 
-  // generate token
-  const token = await createToken({ id: findUser._id, email });
+  const checkRole = await User.findOne({ email: email });
 
-  res.send({ token });
+  // generate token
+  const token = await createToken({ id: findUser._id.toString(), email });
+
+  res.send({ token, role: checkRole.role });
 };
 
 exports.getToken = async (req, res) => {
@@ -43,9 +50,11 @@ exports.getToken = async (req, res) => {
     if (!findUser) return res.status(404).send("No User data found !");
 
     // generate token
-    const token = await createToken({ id: findUser._id, email });
+    const token = await createToken({ id: findUser._id.toString(), email });
 
-    res.send({ token });
+    const checkRole = await User.findOne({ email: email });
+    console.log({ checkRole });
+    res.send({ token, role: checkRole.role });
   } catch (error) {
     res.status(500).send(error.message);
   }

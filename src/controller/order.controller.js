@@ -82,13 +82,16 @@ exports.myWishList = async (req, res) => {
 exports.myOrders = async (req, res) => {
   const bookings = await getDb().collection("booked");
   const { id } = req.decoded;
-  console.log("myOrders", id);
+
   const result = await bookings
     .aggregate([
       {
         $match: {
           buyerId: ObjectId(id),
         },
+      },
+      {
+        $sort: { createdAt: -1 },
       },
       {
         $lookup: {

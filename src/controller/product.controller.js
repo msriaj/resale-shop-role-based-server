@@ -36,6 +36,9 @@ exports.getProducts = async (req, res) => {
         },
       },
       {
+        $sort: { createdAt: -1 },
+      },
+      {
         $lookup: {
           from: "user",
           localField: "userID",
@@ -49,6 +52,30 @@ exports.getProducts = async (req, res) => {
   res.send(result);
 };
 
+exports.advertisement = async (req, res) => {
+  const products = await getDb().collection("product");
+  const result = await products
+    .aggregate([
+      {
+        $match: {
+          _id: ObjectId(req.params.id),
+        },
+      },
+
+      {
+        $lookup: {
+          from: "user",
+          localField: "userID",
+          foreignField: "_id",
+          as: "sellerInfo",
+        },
+      },
+    ])
+    .toArray();
+
+  res.send(...result);
+};
+
 exports.getProductsByLocation = async (req, res) => {
   const products = await getDb().collection("product");
   const result = await products
@@ -58,6 +85,9 @@ exports.getProductsByLocation = async (req, res) => {
           location: req.params.location,
           status: "available",
         },
+      },
+      {
+        $sort: { createdAt: -1 },
       },
       {
         $lookup: {
@@ -84,6 +114,9 @@ exports.advertize = async (req, res) => {
         },
       },
       {
+        $sort: { createdAt: -1 },
+      },
+      {
         $lookup: {
           from: "user",
           localField: "userID",
@@ -104,6 +137,9 @@ exports.getProductsByCat = async (req, res) => {
     .aggregate([
       {
         $match: { category: ObjectId(req.params.id), status: "available" },
+      },
+      {
+        $sort: { createdAt: -1 },
       },
       {
         $lookup: {
